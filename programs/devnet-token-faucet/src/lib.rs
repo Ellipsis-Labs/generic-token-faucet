@@ -1,6 +1,8 @@
-use std::mem::size_of;
-
-use anchor_lang::{prelude::*, solana_program::{instruction::Instruction, sysvar}};
+use anchor_lang::{
+    prelude::*,
+    solana_program::{instruction::Instruction, sysvar},
+    InstructionData,
+};
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -109,37 +111,6 @@ pub struct MintData {
     pub is_initialized: bool,
 }
 
-#[derive(Clone, Debug)]
-pub enum FaucetInstruction {
-    CreateMint {
-        ticker: String,
-        decimals: u8
-    },
-    AirdropSpl {
-        ticker: String,
-        amount: u64
-    }
-}
-
-impl FaucetInstruction {
-    pub fn pack(&self) -> Vec<u8> {
-        let mut buf = Vec::with_capacity(size_of::<Self>());
-        match self {
-            Self::CreateMint { ticker, decimals } => {
-                buf.push(0);
-                buf.extend_from_slice(ticker.as_ref());
-                buf.extend_from_slice(&decimals.to_le_bytes());
-            },
-            Self::AirdropSpl { ticker, amount } => {
-                buf.push(1);
-                buf.extend_from_slice(ticker.as_ref());
-                buf.extend_from_slice(&amount.to_le_bytes());
-            }
-        }
-        buf
-    }
-}
-
 pub fn create_mint_ix(
     program_id: Pubkey,
     payer: Pubkey,
@@ -148,24 +119,31 @@ pub fn create_mint_ix(
 ) -> Instruction {
     let (mint, _) = Pubkey::find_program_address(
         &["mint".as_bytes(), ticker.to_lowercase().as_ref()],
-        &program_id);
+        &program_id,
+    );
 
     let (mint_authority, _) = Pubkey::find_program_address(
         &["mint-authority".as_bytes(), ticker.to_lowercase().as_ref()],
-        &program_id);
+        &program_id,
+    );
 
-    let accounts = vec![
-        AccountMeta::new(mint, false),
-        AccountMeta::new(mint_authority, false),
-        AccountMeta::new(payer, true),
-        AccountMeta::new_readonly(token::ID, false),
-        AccountMeta::new_readonly(sysvar::rent::id(), false),
-    ];
+    let accounts = accounts::CreateMint {
+        mint,
+        mint_authority,
+        payer,
+        token_program: token::ID,
+        system_program: System::id(),
+        rent: sysvar::rent::id(),
+    };
 
     Instruction {
         program_id,
-        accounts,
-        data: FaucetInstruction::CreateMint { ticker, decimals }.pack()
+        accounts: accounts.to_account_metas(None),
+        data: instruction::CreateMint {
+            _ticker: ticker,
+            _decimals: decimals,
+        }
+        .data(),
     }
 }
 
@@ -177,29 +155,27 @@ pub fn airdrop_spl_ix(
 ) -> Instruction {
     let (mint, _) = Pubkey::find_program_address(
         &["mint".as_bytes(), ticker.to_lowercase().as_ref()],
-        &program_id);
+        &program_id,
+    );
 
     let (mint_authority, _) = Pubkey::find_program_address(
         &["mint-authority".as_bytes(), ticker.to_lowercase().as_ref()],
-        &program_id);
-    
-    let destination = spl_associated_token_account::get_associated_token_address(
-        &payer,
-        &mint
+        &program_id,
     );
-    
-    let accounts = vec![
-        AccountMeta::new(mint, false),
-        AccountMeta::new(mint_authority, false),
-        AccountMeta::new(destination, false),
-        AccountMeta::new_readonly(token::ID, false),
-        AccountMeta::new_readonly(sysvar::rent::id(), false),
-    ];
+
+    let destination = spl_associated_token_account::get_associated_token_address(&payer, &mint);
+
+    let accounts = accounts::AirdropSpl {
+        mint,
+        mint_authority,
+        destination,
+        token_program: token::ID,
+    };
 
     Instruction {
         program_id,
-        accounts,
-        data: FaucetInstruction::AirdropSpl { ticker, amount }.pack()
+        accounts: accounts.to_account_metas(None),
+        data: instruction::AirdropSpl { ticker, amount }.data(),
     }
 }
 
@@ -216,11 +192,30 @@ mod ix_tests {
 
         let instruction = create_mint_ix(program_id, payer, ticker.clone(), decimals);
         assert_eq!(instruction.program_id, program_id);
-        assert_eq!(instruction.accounts.len(), 5);
+        assert_eq!(instruction.accounts.len(), 6);
         assert_eq!(
             instruction.data,
-            FaucetInstruction::CreateMint { ticker, decimals }
-            .pack()
+            instruction::CreateMint {
+                _ticker: ticker,
+                _decimals: decimals
+            }
+            .data()
         );
+    }
+
+    #[test]
+    fn test_airdrop_spl_ix() {
+        let program_id = Pubkey::new_unique();
+        let payer = Pubkey::new_unique();
+        let ticker = "SOL".to_string();
+        let amount: u64 = 10;
+
+        let instruction = airdrop_spl_ix(program_id, ticker.clone(), payer, amount);
+        assert_eq!(instruction.program_id, program_id);
+        assert_eq!(instruction.accounts.len(), 4);
+        assert_eq!(
+            instruction.data,
+            instruction::AirdropSpl { ticker, amount }.data()
+        )
     }
 }
