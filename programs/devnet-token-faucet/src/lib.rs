@@ -5,7 +5,7 @@ use anchor_lang::{
 };
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("DLr1ELqXdqAqf1TCuXedFx8YaVq4KQDudnAvprJcJjRt");
 
 #[program]
 pub mod devnet_token_faucet {
