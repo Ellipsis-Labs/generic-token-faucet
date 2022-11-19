@@ -3,6 +3,7 @@ name = "devnet-token-faucet"
 version = "0.1.0"
 description = "Faucet program that allows creation and minting of spl tokens"
 edition = "2021"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib", "lib"]
