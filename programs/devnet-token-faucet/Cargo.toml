@@ -1,6 +1,6 @@
 [package]
 name = "devnet-token-faucet"
-version = "0.1.0"
+version = "0.1.1"
 description = "Faucet program that allows creation and minting of spl tokens"
 edition = "2021"
 license = "MIT"
@@ -20,3 +20,6 @@ default = []
 anchor-lang = "0.25.0"
 anchor-spl = "0.25.0"
 spl-associated-token-account = "1.0.5"
+
+[patch.crates-io]
+anchor-spl = { git = 'https://github.com/coral-xyz/anchor/tree/master/spl' }

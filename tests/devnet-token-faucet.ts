@@ -16,7 +16,7 @@ describe("devnet-token-faucet", () => {
 
   const program = anchor.workspace.DevnetTokenFaucet as Program<DevnetTokenFaucet>;
 
-  let ticker = "SOL"
+  let ticker = "AAA"
   let ticker_lowercase = ticker.toLowerCase()
   let decimals = 9
   let amount_to_mint = 10 * 10^(decimals) 
@@ -101,7 +101,7 @@ describe("devnet-token-faucet", () => {
 
     try {
       await program.methods
-        .createMint("sol",decimals) // Test lowercase ticker, which should not matter
+        .createMint("aaa",decimals) // Test lowercase ticker, which should not matter
         .accounts({
           mint,
           mintAuthority,
