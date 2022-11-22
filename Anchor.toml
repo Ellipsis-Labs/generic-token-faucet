@@ -8,7 +8,7 @@ devnet_token_faucet = "DLr1ELqXdqAqf1TCuXedFx8YaVq4KQDudnAvprJcJjRt"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "/home/jamesl/.config/solana/id.json"
 
 [scripts]
