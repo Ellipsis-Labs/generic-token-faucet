@@ -20,6 +20,3 @@ default = []
 anchor-lang = { version = "0.25.0", git = "https://github.com/coral-xyz/anchor/", branch = "master" }
 anchor-spl = { version = "0.25.0", git = "https://github.com/coral-xyz/anchor/", branch = "master" }
 spl-associated-token-account = "1.1.1"
-
-#[patch.crates-io]
-#anchor-spl = { git = 'https://github.com/coral-xyz/anchor/tree/master/spl' }
