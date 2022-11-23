@@ -5,7 +5,7 @@ use anchor_lang::{
 };
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
-declare_id!("DLr1ELqXdqAqf1TCuXedFx8YaVq4KQDudnAvprJcJjRt");
+declare_id!("FF2UnZt7Lce3S65tW5cMVKz8iVAPoCS8ETavmUhsWLJB");
 
 pub fn get_mint_address(ticker: &str) -> Pubkey {
     Pubkey::find_program_address(
