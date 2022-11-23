@@ -72,7 +72,7 @@ describe("devnet-token-faucet", () => {
     )
     
     const ix = await program.methods
-      .airdropSpl(ticker, new anchor.BN(amount_to_mint))
+      .airdropSpl(new anchor.BN(amount_to_mint))
       .accounts({
         mint,
         mintAuthority,
