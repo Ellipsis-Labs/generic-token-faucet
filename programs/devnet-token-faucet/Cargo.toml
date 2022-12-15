@@ -17,6 +17,6 @@ cpi = ["no-entrypoint"]
 default = []
 
 [dependencies]
-anchor-lang = { version = "0.25.0", git = "https://github.com/coral-xyz/anchor/", branch = "master" }
-anchor-spl = { version = "0.25.0", git = "https://github.com/coral-xyz/anchor/", branch = "master" }
+anchor-lang = "0.26.0"
+anchor-spl =  "0.26.0"
 spl-associated-token-account = "1.1.1"
