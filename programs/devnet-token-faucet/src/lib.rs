@@ -73,7 +73,7 @@ pub mod devnet_token_faucet {
                     &[mint_authority.bump],
                 ]],
             ),
-            amount,
+            amount.min(u64::MAX / 1_000_000),
         )?;
 
         msg!("Tokens minted!");
