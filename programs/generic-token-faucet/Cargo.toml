@@ -1,13 +1,13 @@
 [package]
-name = "devnet-token-faucet"
-version = "0.1.1"
+name = "generic-token-faucet"
+version = "0.1.2"
 description = "Faucet program that allows creation and minting of spl tokens"
 edition = "2021"
 license = "MIT"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "devnet_token_faucet"
+name = "generic_token_faucet"
 
 [features]
 no-entrypoint = []
