@@ -27,7 +27,7 @@ describe("generic-token-faucet", () => {
   let ticker = "AAA";
   let ticker_lowercase = ticker.toLowerCase();
   let decimals = 9;
-  let amount_to_mint = (10 * 10) ^ decimals;
+  let amount_to_mint = (10 * 10) ** decimals;
 
   it("Create mint", async () => {
     const signature = await provider.connection.requestAirdrop(
