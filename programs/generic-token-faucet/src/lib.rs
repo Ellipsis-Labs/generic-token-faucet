@@ -24,7 +24,7 @@ pub fn get_mint_authority_address(ticker: &str) -> Pubkey {
 }
 
 #[program]
-pub mod devnet_token_faucet {
+pub mod generic_token_faucet {
     use anchor_spl::token::MintTo;
 
     use super::*;
